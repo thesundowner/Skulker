@@ -21,8 +21,8 @@ class Viewer:
         self.menubar.add_cascade(label="Help" , menu=self.help_menu)
 
         self.file_menu.add_command(label="Open File" , command=self.open_file)
-        self.file_menu.add_separator()
-        self.file_menu.add_command(label="Exit" , command=lambda :exit(0))
+        # self.file_menu.add_separator()
+        # self.file_menu.add_command(label="Exit" , command=lambda :exit(0))
         self.help_menu.add_command(label="Help" , command=lambda :show_help())
         self.help_menu.add_command(label="About" , command=self.show_about)
 
@@ -87,18 +87,20 @@ class Viewer:
     def view_text(self):
         if self.view_window is None or not self.view_window.winfo_exists():
             self.view_window = ctk.CTkToplevel()
-            self.str = self.image_data.get_data()
-
+            self.d = self.image_data.get_data()
+            self.password_dialog = ctk.CTkInputDialog(text="Please input a password(Requied)" , title=f"{WM_TITLE}")
+            password = self.password_dialog.get_input()
+            e = Enc(password)
+            k = e.gen_key()
+            self.str = str(e.decrypt(self.d , k) ,encoding="utf-8" )
             self.view_window.geometry("500x300+1096+90")
             self.view_window.title(f"{self.path} - View Text")
-
             self.text_label = ctk.CTkTextbox(master=self.view_window,width=(700 / 2))
             self.text_label.configure(state=ctk.NORMAL)
             self.text_label.insert(text=self.str , index='0.0')
             self.text_label.configure(state=ctk.DISABLED)
             self.text_label.place(relx=0.5,rely=0.4,anchor=ctk.CENTER)
             self.vbutton_frame = ctk.CTkFrame(master=self.view_window)
-
             self.exitbtn = ctk.CTkButton(master=self.vbutton_frame, text="Exit" , command=lambda: self.view_window.destroy()).grid(row=0 ,column=1 ,padx=10 , pady=10)
             self.selabtn = ctk.CTkButton(master=self.vbutton_frame, text="Select All" ,width=75 ,command=self.select_all)
             self.selabtn.grid(row=0 ,column=2 ,padx=10 ,pady=10)

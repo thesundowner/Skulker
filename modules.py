@@ -12,6 +12,11 @@ import platform #get python version
 import webbrowser as wb # externaal http link to navigate using browser
 import pyperclip # copy & paste functions
 
+# encryption
+from Crypto import Random
+from Crypto.Cipher import AES
+from Crypto.Protocol.KDF import  PBKDF2
+
 
 # macros
 
@@ -22,11 +27,13 @@ WM_SIZE = f"{WM_WIDTH}x{WM_HEIGHT}"
 INJECT_START_OFFSET = 'FFD9' 
 END_INJECT_HEADER = 'FFDF'
 TEXT_MAX_CHAR = 1024
+SALT = b'\xf9}\xc7\x86\x88\xb5K\xec:\xedf\x97`\xfe3\x9cRv\xf09\xa3\xb8Y),\xb6i\xdaS\x0f\xf4\x9e'
 
 
-VERSION_MAJOR = 1
-VERSION_MINOR = 0
+VERSION_MAJOR = 2
+VERSION_MINOR = 1
 VERSION_PATCH = 0
+READY_FOR_PRODUCTION = False
 
 
 # shared functions

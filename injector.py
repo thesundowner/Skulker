@@ -20,8 +20,8 @@ class Injector:
         self.menubar.add_cascade(label="Help" , menu=self.help_menu)
 
         self.file_menu.add_command(label="Open File" , command=self.open_file)
-        self.file_menu.add_separator()
-        self.file_menu.add_command(label="Exit" , command=lambda :exit(0))
+        # self.file_menu.add_separator()
+        # self.file_menu.add_command(label="Exit" , command=lambda :exit())
         self.help_menu.add_command(label="Help" , command=lambda :show_help())
         self.help_menu.add_command(label="About" , command=self.show_about)
 
@@ -101,17 +101,21 @@ class Injector:
     def inject_text(self):
         self.injecttext_dialog = ctk.CTkInputDialog(text="Type the text you want to inject:" , title=f"{WM_TITLE} - InjectText")
         self.str = self.injecttext_dialog.get_input()
+        self.password_dialog = ctk.CTkInputDialog(text="Please input a password(Requied)" , title=f"{WM_TITLE} - InjectText")
+        self.password = self.password_dialog.get_input()
+        
 
-        try:
-            if self.has_text_data is not None or not False:
+
+        if self.has_text_data is not None or not False:
                 self.start_offset = self.image_data.start_o
                 self.endheader = self.image_data.end_head
                 self.image_data.erase_data(self.start_offset,self.endheader)
-        except ValueError:
-            pass
+
         try:
             if not len(self.str) > TEXT_MAX_CHAR:
-                self.image_data.write_data(self.str)
+                c = Enc(self.password)
+                k = c.gen_key()
+                self.image_data.write_data(c.encrypt(self.str,k))
                 self.filesize_var.set(f"Size(In bytes): {self.image_data.file_size}")
                 self.has_text_data = True
             else:
