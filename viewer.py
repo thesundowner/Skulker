@@ -1,6 +1,6 @@
-# (C) 2023 BIGG SMOKE
-from modules import *
-from imageData import *
+from _modules import *
+from _imagedata import *
+from _cryptor import *
 
 WM_TITLE = "Skulker Viewer"
 
@@ -52,7 +52,6 @@ class Viewer:
         self.filesize_label = ctk.CTkLabel(master=self.root,textvariable=self.filesize_var)
 
 
-
     def open_file(self):
         self.photo_file= None
         self.image_data = None
@@ -68,7 +67,7 @@ class Viewer:
             self.wbutton_frame.destroy()
 
             self.path_var.set(f"File: {self.path}")
-            self.filesize_var.set(f"Size(In bytes): {self.image_data.file_size}")
+            self.filesize_var.set(f"Size(In bytes): {self.image_data.filesize}")
             self.path_label.pack(padx=45,pady=20)
             self.filesize_label.pack()
 
@@ -88,11 +87,11 @@ class Viewer:
         if self.view_window is None or not self.view_window.winfo_exists():
             self.view_window = ctk.CTkToplevel()
             self.d = self.image_data.get_data()
-            self.password_dialog = ctk.CTkInputDialog(text="Please input a password(Requied)" , title=f"{WM_TITLE}")
+            self.password_dialog = ctk.CTkInputDialog(text="Please input the password." ,entry_text_color="#333", title=f"{WM_TITLE}")
             password = self.password_dialog.get_input()
             e = Enc(password)
-            k = e.gen_key()
-            self.str = str(e.decrypt(self.d , k) ,encoding="utf-8" )
+            k = e.key
+            self.str = str(e.decrypt(self.d , k) ,encoding="utf-8" , errors='ignore' )
             self.view_window.geometry("500x300+1096+90")
             self.view_window.title(f"{self.path} - View Text")
             self.text_label = ctk.CTkTextbox(master=self.view_window,width=(700 / 2))
@@ -105,8 +104,6 @@ class Viewer:
             self.selabtn = ctk.CTkButton(master=self.vbutton_frame, text="Select All" ,width=75 ,command=self.select_all)
             self.selabtn.grid(row=0 ,column=2 ,padx=10 ,pady=10)
             self.copybtn = ctk.CTkButton(master=self.vbutton_frame, text="Copy" ,width=75 ,command=self.copy_text)
-            if self.str == "<NO DATA AVAILABLE>":
-                self.selabtn.destroy()
             self.vbutton_frame.place(relx=0.5 , rely=0.9 , anchor=ctk.CENTER)
 
         else:
@@ -124,11 +121,6 @@ class Viewer:
             messagebox.showinfo(title=WM_TITLE , message="Copied to Clipboard!")           
 
 
-
-
-
-
-
     def show_about(self):
         if self.about_window is None or not self.about_window.winfo_exists():
             self.about_window = ctk.CTkToplevel()
@@ -142,32 +134,8 @@ class Viewer:
             self.about_window.focus()
 
 
-
-
-
-
-
-
-
-        
-
-
-
     def run(self):
         self.root.mainloop()
-
-        
-
-
-
-
-
-
-
-
-
-
-
 
 
 

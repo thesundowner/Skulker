@@ -1,12 +1,14 @@
-# (C) 2023 BIGG SMOKE
-from modules import *
-from imageData import *
+from _modules import *
+from _imagedata import *
+from _cryptor import *
 
 WM_TITLE = "Skulker Injector"
 
 
+
 class Injector:
     def __init__(self):
+        show_warning(READY_FOR_PRODUCTION)
         self.root = ctk.CTk()
         self.root.title(WM_TITLE)
         self.root.geometry(WM_SIZE)
@@ -54,33 +56,36 @@ class Injector:
 
 
 
+
     def open_file(self):
-        self.photo_file= None
-        self.image_data = None
+            self.photo_file= None
+            self.image_data = None
 
-        self.photo_file = filedialog.askopenfile(mode='ab' , filetypes=[('JPEG Files', '*.jpg , *.jpeg')])
+            self.photo_file = filedialog.askopenfile(mode='ab' , filetypes=[('JPEG Files', '*.jpg , *.jpeg')])
 
-        if self.photo_file is not None:
-            
-            self.path = os.path.abspath(self.photo_file.name)
-            self.image_data = ImageData(self.path) # Object creation using imagedata class
+            if self.photo_file is not None:
+                
+                self.path = os.path.abspath(self.photo_file.name)
+                try:
+                    self.image_data = ImageData(self.path) # Object creation using imagedata class
 
-            self.welcome_frame.destroy()
-            self.wbutton_frame.destroy()
+                    self.welcome_frame.destroy()
+                    self.wbutton_frame.destroy()
 
-            self.path_var.set(f"File: {self.path}")
-            self.filesize_var.set(f"Size(In bytes): {self.image_data.file_size}")
-            self.path_label.pack(padx=45,pady=20)
-            self.filesize_label.pack()
+                    self.path_var.set(f"File: {self.path}")
+                    self.filesize_var.set(f"Size(In bytes): {self.image_data.filesize}")
+                    self.path_label.pack(padx=45,pady=20)
+                    self.filesize_label.pack()
+                except ValueError:
+                    messagebox.showerror(title="Error",message="The image you chose doesn't have the correct headers needed for injection. Maybe the image is corrupted.")
+                    return 0
 
-            self.root.config(menu=self.menubar)
+                self.root.config(menu=self.menubar)
 
-            self.obutton_frame = ctk.CTkFrame(master=self.root)
-            self.previewimage_button = ctk.CTkButton(master=self.obutton_frame,text="Preview Image" , command=lambda :preview_image(self.path),width=100).grid(row=0,column=1,padx=10,pady=10)
-            self.injecttext_button = ctk.CTkButton(master=self.obutton_frame , text="Inject Text" , command=self.inject_text , width=100).grid(row=0,column=2,padx=10,pady=10) 
-            self.obutton_frame.place(relx=0.5,rely=0.4,anchor=ctk.CENTER)
-
-
+                self.obutton_frame = ctk.CTkFrame(master=self.root)
+                self.previewimage_button = ctk.CTkButton(master=self.obutton_frame,text="Preview Image" , command=lambda :preview_image(self.path),width=100).grid(row=0,column=1,padx=10,pady=10)
+                self.injecttext_button = ctk.CTkButton(master=self.obutton_frame , text="Inject Text" , command=self.inject_text , width=100).grid(row=0,column=2,padx=10,pady=10) 
+                self.obutton_frame.place(relx=0.5,rely=0.4,anchor=ctk.CENTER)
 
 
     def show_about(self):
@@ -89,7 +94,7 @@ class Injector:
             self.about_window.resizable(False,False)
             self.about_window.geometry("400x300+1096+90")
             self.about_window.title(f"About {WM_TITLE}")
-            self.about_label = ctk.CTkLabel(master=self.about_window,text=f"{WM_TITLE}\nVersion: {VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}\n\nMade by Bigg Smoke\nPublished by The Lunar Surface (c) 2023\nuses 'Imagine': Copyright (c) 2003-2023 Sejin Chun\n\nTkinter version: {TkVersion}\nPython Version: {platform.python_version()}\nImagine Version:1.3.1",font=("Roboto",14)).place(relx=0.5,rely=0.4,anchor=ctk.CENTER)
+            self.about_label = ctk.CTkLabel(master=self.about_window,text=f"{WM_TITLE}\nVersion: {VERSION_STR}\n\nMade by Bigg Smoke\nPublished by The Lunar Surface (c) 2023\nuses 'Imagine': Copyright (c) 2003-2023 Sejin Chun\n\nTkinter version: {TkVersion}\nPython Version: {platform.python_version()}\nImagine Version:1.3.1",font=("Roboto",14)).place(relx=0.5,rely=0.4,anchor=ctk.CENTER)
             self.destroy_button = ctk.CTkButton(master=self.about_window , text="Exit" , command=lambda: self.about_window.destroy()).place(relx=0.5 , rely=0.9 , anchor=ctk.CENTER)
             self.about_window.focus()
         else:
@@ -97,38 +102,35 @@ class Injector:
 
 
 
-
     def inject_text(self):
         self.injecttext_dialog = ctk.CTkInputDialog(text="Type the text you want to inject:" , title=f"{WM_TITLE} - InjectText")
         self.str = self.injecttext_dialog.get_input()
-        self.password_dialog = ctk.CTkInputDialog(text="Please input a password(Requied)" , title=f"{WM_TITLE} - InjectText")
-        self.password = self.password_dialog.get_input()
+        self.password_dialog = ctk.CTkInputDialog(text="Please input a password(Requied)" ,entry_text_color="#333" ,  title=f"{WM_TITLE} - InjectText")
+        password = self.password_dialog.get_input()
         
 
 
         if self.has_text_data is not None or not False:
-                self.start_offset = self.image_data.start_o
+                self.start_offset = self.image_data.start_offset
                 self.endheader = self.image_data.end_head
                 self.image_data.erase_data(self.start_offset,self.endheader)
 
-        try:
-            if not len(self.str) > TEXT_MAX_CHAR:
-                c = Enc(self.password)
-                k = c.gen_key()
-                self.image_data.write_data(c.encrypt(self.str,k))
-                self.filesize_var.set(f"Size(In bytes): {self.image_data.file_size}")
-                self.has_text_data = True
-            else:
-                messagebox.showerror(title="Error",message="The text you inputted is too long(>1024 characters)")
+        # try:
+        if not len(self.str) > TEXT_MAX_CHAR:
+            c = Enc(password)
+            k = c.key
+            self.image_data.write_data(c.encrypt(self.str,k))
+            self.filesize_var.set(f"Size(In bytes): {self.image_data.filesize}")
+            self.has_text_data = True
+        else:
+            messagebox.showerror(title="Error",message="The text you inputted is too long(>1024 characters)")
 
-        except TypeError:
-            pass
-
+        # except TypeError:
+            # pass   
 
 
     def run(self):
         self.root.mainloop()
-
 
 
 
