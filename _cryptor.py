@@ -5,7 +5,7 @@ class Enc:
     def __init__(self, password):
         password = str(password)
         if len(password) < 8:
-            messagebox.showwarning(
+            messagebox.showerror(
                 title="Error",
                 message="Password is too short. Specify a longer one. (longer than 8 chars)",
             )

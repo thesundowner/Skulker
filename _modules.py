@@ -10,6 +10,10 @@ from tkinter import Menu, StringVar, TkVersion, filedialog, messagebox
 from Crypto import Random
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
+import http.server
+import webview
+
+ctk.set_default_color_theme("themes/theme.json")
 
 
 # WM_ICON_PATH ="icons\\wm_icon1.ico" unused.
@@ -23,8 +27,8 @@ ENC_SALT = b"\x03\xab\x12K\xc9\xe7\x14\xec\xf0_\x1f4\xf9\xfc\x91\x08y\x81U\xcd\\
 
 
 VERSION_MAJOR = 2
-VERSION_MINOR = 1
-VERSION_PATCH = 1
+VERSION_MINOR = 2
+VERSION_PATCH = 0
 VERSION_STR = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
 READY_FOR_PRODUCTION = True
 

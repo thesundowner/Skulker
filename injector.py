@@ -105,8 +105,7 @@ class Injector:
     def inject_text(self):
         self.injecttext_dialog = ctk.CTkInputDialog(text="Type the text you want to inject:" , title=f"{WM_TITLE} - InjectText")
         self.str = self.injecttext_dialog.get_input()
-        self.password_dialog = ctk.CTkInputDialog(text="Please input a password(Requied)" ,entry_text_color="#333" ,  title=f"{WM_TITLE} - InjectText")
-        password = self.password_dialog.get_input()
+       
         
 
 
@@ -115,18 +114,20 @@ class Injector:
                 self.endheader = self.image_data.end_head
                 self.image_data.erase_data(self.start_offset,self.endheader)
 
-        # try:
-        if not len(self.str) > TEXT_MAX_CHAR:
-            c = Enc(password)
-            k = c.key
-            self.image_data.write_data(c.encrypt(self.str,k))
-            self.filesize_var.set(f"Size(In bytes): {self.image_data.filesize}")
-            self.has_text_data = True
-        else:
-            messagebox.showerror(title="Error",message="The text you inputted is too long(>1024 characters)")
+        try:
+            if not len(self.str) > TEXT_MAX_CHAR:
+                self.password_dialog = ctk.CTkInputDialog(text="Please input a password(Requied)" ,entry_text_color="#333" ,  title=f"{WM_TITLE} - InjectText")
+                password = self.password_dialog.get_input()
+                c = Enc(password)
+                k = c.key
+                self.image_data.write_data(c.encrypt(self.str,k))
+                self.filesize_var.set(f"Size(In bytes): {self.image_data.filesize}")
+                self.has_text_data = True
+            else:
+                messagebox.showerror(title="Error",message="The text you inputted is too long(>1024 characters)")
 
-        # except TypeError:
-            # pass   
+        except TypeError:
+            messagebox.showerror(title="Error" , message="Can't inject nothing...")  
 
 
     def run(self):
