@@ -4,7 +4,7 @@ Skulker is a program that let's you hide secret messages in plainsight in JPEG f
 Besides text, you can hide other files as well. Want to stash your tax records so that the IRS won't find it? sure, no one would ever thought you'll hide it inside of the picures of your cat.
 If you're familiar with Steghide, you'll know what this application does. But the diffrerence in Skulker is it directly appends the data. no algorithms.
 ### Features
-- Maximum text length of 1024 characters
+- Maximum text length of 2048 characters
 - Easy to use interface (Thanks to the CTkinter library)
 - utf-8 support
 - AES Encryption (beta) - Added in 2.1.1
