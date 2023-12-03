@@ -1,17 +1,23 @@
-from _modules import *
+from Crypto import Random
+from Crypto.Cipher import AES
+from Crypto.Protocol.KDF import PBKDF2
+from hashlib import sha256
 
+SALT = b'M\xa6\xf4\xd3\xf6\xd2L\xba\x0c<\xc5O\x98\x14\t\x19'
+SALT = sha256(SALT).digest()
+print(SALT)
 
 class Enc:
     def __init__(self, password):
         password = str(password)
+        h = None
         if len(password) < 8:
-            messagebox.showerror(
-                title="Error",
-                message="Password is too short. Specify a longer one. (longer than 8 chars)",
-            )
             raise ValueError("Password too short.")
-
-        self.key = self.gen_key(password, ENC_SALT)
+        
+        h = sha256()
+        h.update(password.encode('utf-8'))
+        password = h.hexdigest()
+        self.key = self.gen_key(password, SALT)
 
     def gen_key(self, password, salt):
         return PBKDF2(password, salt, dkLen=32)
@@ -27,7 +33,12 @@ class Enc:
         return iv + cipher.encrypt(message)
 
     def decrypt(self, ciphertext, key):
-        iv = ciphertext[: AES.block_size]
-        cipher = AES.new(key, AES.MODE_CBC, iv)
-        otext = cipher.decrypt(ciphertext[AES.block_size :])
-        return otext.rstrip(b"\0")
+        try:
+            iv = ciphertext[: AES.block_size]
+            cipher = AES.new(key, AES.MODE_CBC, iv)
+            otext = cipher.decrypt(ciphertext[AES.block_size :])
+            return otext.rstrip(b"\0")
+        except ValueError as err:
+            # messagebox.showerror(title="Error" , message=f"{type(err).__name__}: Incorrect IV length.")
+            print(type(err).__name__)
+            return 

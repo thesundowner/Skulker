@@ -10,8 +10,7 @@ from tkinter import Menu, StringVar, TkVersion, filedialog, messagebox
 from Crypto import Random
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
-import http.server
-import webview
+from hashlib import sha256
 
 ctk.set_default_color_theme("themes/theme.json")
 
@@ -22,15 +21,15 @@ WM_HEIGHT = 400
 WM_SIZE = f"{WM_WIDTH}x{WM_HEIGHT}"
 INJECT_START_OFFSET = "FFD9"
 END_INJECT_HEADER = "FFDF"
-TEXT_MAX_CHAR = 2048
+TEXT_MAX_CHAR = 8192
 ENC_SALT = b"\x03\xab\x12K\xc9\xe7\x14\xec\xf0_\x1f4\xf9\xfc\x91\x08y\x81U\xcd\\\xc7\xe0(\xfd\xd9T\xba\xc6\xac!\xa8"
 
 
 VERSION_MAJOR = 2
-VERSION_MINOR = 2
+VERSION_MINOR = 3
 VERSION_PATCH = 0
 VERSION_STR = f"{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
-READY_FOR_PRODUCTION = True
+READY_FOR_PRODUCTION = False
 
 
 def preview_image(path):

@@ -61,7 +61,10 @@ class Injector:
             self.photo_file= None
             self.image_data = None
 
-            self.photo_file = filedialog.askopenfile(mode='ab' , filetypes=[('JPEG Files', '*.jpg , *.jpeg')])
+            try:
+                self.photo_file = filedialog.askopenfile(mode='ab' , filetypes=[('JPEG Files', '*.jpg , *.jpeg')])
+            except PermissionError as err:
+                messagebox.showerror(title="Error" , message=f"{type(err).__name__}: You seem to not have the nesessary permissions to edit this image...")
 
             if self.photo_file is not None:
                 
@@ -115,8 +118,10 @@ class Injector:
                 self.image_data.erase_data(self.start_offset,self.endheader)
 
         try:
+            if len(self.str) == 0:
+                 return 
             if not len(self.str) > TEXT_MAX_CHAR:
-                self.password_dialog = ctk.CTkInputDialog(text="Please input a password(Requied)" ,entry_text_color="#333" ,  title=f"{WM_TITLE} - InjectText")
+                self.password_dialog = ctk.CTkInputDialog(text="Please input a password(Requied)" ,entry_text_color="#030515" ,  title=f"{WM_TITLE} - InjectText")
                 password = self.password_dialog.get_input()
                 c = Enc(password)
                 k = c.key
@@ -127,7 +132,8 @@ class Injector:
                 messagebox.showerror(title="Error",message="The text you inputted is too long(>1024 characters)")
 
         except TypeError:
-            messagebox.showerror(title="Error" , message="Can't inject nothing...")  
+            # messagebox.showerror(title="Error" , message="Can't inject nothing...")  
+                return 
 
 
     def run(self):
