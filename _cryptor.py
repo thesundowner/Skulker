@@ -1,11 +1,7 @@
-from Crypto import Random
-from Crypto.Cipher import AES
-from Crypto.Protocol.KDF import PBKDF2
-from hashlib import sha256
+from _modules import *
 
 SALT = b'M\xa6\xf4\xd3\xf6\xd2L\xba\x0c<\xc5O\x98\x14\t\x19'
 SALT = sha256(SALT).digest()
-print(SALT)
 
 class Enc:
     def __init__(self, password):
@@ -38,7 +34,6 @@ class Enc:
             cipher = AES.new(key, AES.MODE_CBC, iv)
             otext = cipher.decrypt(ciphertext[AES.block_size :])
             return otext.rstrip(b"\0")
-        except ValueError as err:
-            # messagebox.showerror(title="Error" , message=f"{type(err).__name__}: Incorrect IV length.")
-            print(type(err).__name__)
+        except Exception as err:
+            messagebox.showerror(title='Error' , message=err)
             return 

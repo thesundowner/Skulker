@@ -41,8 +41,9 @@ class ImageData:
             try:
                 self.filep.write(self.data)
                 messagebox.showinfo(title="Info", message="Injection Succsesful.")
-            except:
-                messagebox.showerror(title="Error", message=f"Error(s) found: {3}")
+                # self.filep.close()
+            except Exception as e:
+                messagebox.showerror(title="Error", message=f"{e}")
 
     def get_data(self):
         with open(self.filepath, "rb") as self.filep:
