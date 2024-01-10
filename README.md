@@ -1,6 +1,5 @@
 # Skulker Readme
 
-NOTE: Commit and release dates are out of sync. I'm too lazy to recompile everything just because i forgot to print a variable.
 
 
 Skulker is a application that let's you hide information in jpeg photos with encryption. the photos will be untouched. The only difference is in the file size (obviously). 
