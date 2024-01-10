@@ -1,12 +1,9 @@
 # Skulker Readme
 
-NOTE: the dates of the commit and releases are messed up. i am lazy to compile a release everytime because i forgot to print a variable. So i made a `setup.py` file that will do the compilation. 
-1. Clone the Project
-2. Download Python 3.11.5 (idk but you can use the latest version)
-3. go to the project folder and open up a terminal window
-4. run `python -m pip install -r requirements.txt`
-5. wait
-6. Download UPX
-7. Download and install Inno Setup Wizard (optional)
-8. run `setup.py`
-9. go to `dists` and run the application.
+NOTE: Commit and release dates are out of sync. I'm too lazy to recompile everything just because i forgot to print a variable.
+
+
+Skulker is a application that let's you hide information in jpeg photos with encryption. the photos will be untouched. The only difference is in the file size (obviously). 
+
+The algorithm behind this is.. appending the data directly. 
+In more technical terms, every jpeg file has the hex `0xffd9` at the end and `0xffd8` at the beginning. A program that opens a jpeg photo only care about what's inside those 2 offsets. It doesn't care what's written outside those 2 markers. Skulker exploits this and writes the data after `0xffd9`. A typical photo viewer doesn't care about what's outside the file - So theoretically, It's hidden. Along with AES encryption, Your tax records are safe from the IRC. 
